@@ -44,4 +44,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation("org.mongodb:mongodb-driver:3.12.14")
+    implementation("io.github.cdimascio:dotenv-java:3.0.0")
 }
+
+
+// ctrl + alt + shift + S
