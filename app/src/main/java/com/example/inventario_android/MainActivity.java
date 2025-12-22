@@ -14,9 +14,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.inventario_android.databinding.ActivityMainBinding;
-import com.google.firebase.Firebase;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,18 +22,13 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-    private FirebaseFirestore bd = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        System.out.println("Dentro MA");
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        firebaseConfig : FirebaseRemoteConfig.getInstance();
-
 
         setSupportActionBar(binding.toolbar);
 
