@@ -12,7 +12,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.inventario_android.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
-    // Prueba
+    // Prueba 2
     private FragmentFirstBinding binding;
 
     @Override
