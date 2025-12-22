@@ -11,6 +11,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.inventario_android.databinding.FragmentFirstBinding;
 
+import com.google.firebase.Firebase;
+import com.google.firebase.firestore.FirebaseFirestore;
 public class FirstFragment extends Fragment {
 // Prueba
     private FragmentFirstBinding binding;
@@ -21,6 +23,7 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
+        System.out.println("Dentro FirstFragment");
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
