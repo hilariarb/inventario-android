@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "55075116780",
+    "project_id": "inventario-sistemp",
+    "storage_bucket": "inventario-sistemp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55075116780:android:bd40e44dc996beb73037c9",
+        "android_client_info": {
+          "package_name": "com.example.inventario_android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzl5V2lBbRlzkI4WFVsmDqDk9_F-Lakfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
