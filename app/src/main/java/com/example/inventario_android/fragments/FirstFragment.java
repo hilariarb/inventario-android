@@ -1,4 +1,4 @@
-package com.example.inventario_android;
+package com.example.inventario_android.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.inventario_android.R;
+import com.example.inventario_android.conexion_bd.DB_Conexion;
+import com.example.inventario_android.conexion_bd.Producto;
 import com.example.inventario_android.databinding.FragmentFirstBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.List;
 
 public class FirstFragment extends Fragment {
     // Prueba 2
@@ -38,13 +43,26 @@ public class FirstFragment extends Fragment {
                 NavHostFragment.findNavController(FirstFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment)
         );
-        DB_Conexion.obtener(db);
+
+        prueba_GET(); // <--------------------------------------------------------
     }
 
     @Override
     public void onDestroyView() {
+        DB_Conexion.cerrarConexion(db);
         super.onDestroyView();
         binding = null;
     }
+//----------------------------------------------------------------------------------
+    //              Métodos de prueba back-end
+
+    public void prueba_GET() {
+        Log.d(TAG, "PRUEBA GET");
+        // GET lista
+        DB_Conexion.mostrar(
+                DB_Conexion.obtener(db));
+        Log.d(TAG, "--------------");
+    }
+
 
 }
