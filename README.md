@@ -18,6 +18,6 @@ Java
 - Notificaciones y ventanas de información de errores para los usuarios
     - Toast y Snackbar: Operaciones habituales con los objetos
     - Dialogs: Error al comprar cantidades no válidas o cantidad negativa de productos en el inventario
-- Conexión con una base de datos MongoDB
+- Conexión con una base de datos Firebase
 - Soporte multi-idioma en español e inglés
 - Abstracción, diseño y eficiencia de los componentes del sistema.
