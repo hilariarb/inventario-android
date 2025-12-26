@@ -44,7 +44,12 @@ public class FirstFragment extends Fragment {
                         .navigate(R.id.action_FirstFragment_to_SecondFragment)
         );
 
-        prueba_GET(); // <--------------------------------------------------------
+        // ----------------   METODOS DE PRUEBA DE BACKEND, BORRAR ---------------
+        prueba_GET();
+        prueba_INSERT();
+        prueba_UPDATE();
+        prueba_DELETE();
+        // -----------------------------------------------------------------------
     }
 
     @Override
@@ -64,5 +69,40 @@ public class FirstFragment extends Fragment {
         Log.d(TAG, "--------------");
     }
 
+    public void prueba_INSERT(){
+        Log.d(TAG, "PRUEBA INSERT");
+        Producto nuevo = new Producto("prueba_id",
+                "prueba_nombre",
+                "prueba_descr",
+                false, false);
+
+        DB_Conexion.crearDocumento(db, nuevo);
+        prueba_GET();
+        Log.d(TAG, "--------------");
+    }
+
+    public void prueba_UPDATE(){
+        Log.d(TAG, "PRUEBA UPDATE");
+        Producto nuevo = new Producto("prueba_id",
+                "prueba_actualizada",
+                "prueba descr actualizada",
+                true, true);
+
+        DB_Conexion.actualizar(db, nuevo);
+        prueba_GET();
+        Log.d(TAG, "--------------");
+    }
+
+    public void prueba_DELETE(){
+        Log.d(TAG, "PRUEBA DELETE");
+        Producto nuevo = new Producto("prueba_id",
+                "prueba",
+                "prueba_descr",
+                false, true);
+
+        DB_Conexion.eliminar(db, nuevo);
+        prueba_GET();
+        Log.d(TAG, "--------------");
+    }
 
 }
