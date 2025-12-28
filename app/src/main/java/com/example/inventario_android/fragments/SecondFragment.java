@@ -1,4 +1,4 @@
-package com.example.inventario_android;
+package com.example.inventario_android.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +11,11 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.inventario_android.conexion_bd.ProductoAdapter;
+import com.example.inventario_android.R;
 import com.example.inventario_android.conexion_bd.DB_Conexion;
 import com.example.inventario_android.conexion_bd.Producto;
-import com.example.inventario_android.databinding.FragmentFirstBinding;
 import com.example.inventario_android.databinding.FragmentSecondBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 

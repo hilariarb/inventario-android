@@ -1,4 +1,4 @@
-package com.example.inventario_android;
+package com.example.inventario_android.conexion_bd;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +7,9 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.inventario_android.conexion_bd.Producto;
+
+import com.example.inventario_android.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
