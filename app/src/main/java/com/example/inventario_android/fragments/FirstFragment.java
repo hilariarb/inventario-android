@@ -45,8 +45,13 @@ public class FirstFragment extends Fragment {
                 NavHostFragment.findNavController(FirstFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment));
 
-        // PRUEBA
+        // PRUEBAS
         //cargarTodos();
+        //Producto nuevo_A = new Producto("03lTU7TVyXX8sf6UohoC", "nombre_A", "descrip_A", true, true);
+        //crearProducto(nuevo_A);
+        //actualizarProducto(nuevo_A);
+        //eliminarProducto(nuevo_A.getId());
+
 
         cargarInventario();
     }
@@ -97,6 +102,60 @@ public class FirstFragment extends Fragment {
             public void onError(Exception e) {
                 Log.e(TAG, "Error al cargar la lista desde la db: ", e);
                 Toast.makeText(getContext(), "Error al cargar los datos", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void crearProducto(Producto nuevoProducto){
+        DB_Conexion.crearProducto(db, nuevoProducto, new DB_Conexion.DocumentCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "Producto creado");
+                Toast.makeText(getContext(), "Producto creado", Toast.LENGTH_SHORT).show();
+
+                cargarInventario();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Error al crear el producto", e);
+                Toast.makeText(getContext(), "Error al crear el producto", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void actualizarProducto(Producto productoAEditar){
+        DB_Conexion.editarProducto(db, productoAEditar, new DB_Conexion.DocumentCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "Producto actualizado");
+                Toast.makeText(getContext(), "Producto actualizado", Toast.LENGTH_SHORT).show();
+
+                cargarInventario();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Error al actualizar", e);
+                Toast.makeText(getContext(), "Error al actualizar", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void eliminarProducto(String idDelProductoAEliminar){
+        DB_Conexion.eliminarProducto(db, idDelProductoAEliminar, new DB_Conexion.DocumentCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "Producto eliminado");
+                Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_SHORT).show();
+
+                cargarInventario();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Error al eliminar", e);
+                Toast.makeText(getContext(), "Error al eliminar", Toast.LENGTH_SHORT).show();
             }
         });
     }
