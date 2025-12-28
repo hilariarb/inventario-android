@@ -16,22 +16,22 @@ import com.example.inventario_android.conexion_bd.ProductoAdapter;
 import com.example.inventario_android.R;
 import com.example.inventario_android.conexion_bd.DB_Conexion;
 import com.example.inventario_android.conexion_bd.Producto;
-import com.example.inventario_android.databinding.FragmentFirstBinding;
+import com.example.inventario_android.databinding.FragmentInventarioBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class FirstFragment extends Fragment {
+public class InventarioFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentInventarioBinding binding;
     private static final String TAG = "INVENTARIO";
     private FirebaseFirestore db;
     private ProductoAdapter productoAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentInventarioBinding.inflate(inflater, container, false);
         db = DB_Conexion.crearConexion();
         setupRecyclerView();
 
@@ -42,7 +42,7 @@ public class FirstFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.buttonInventario.setOnClickListener(v ->
-                NavHostFragment.findNavController(FirstFragment.this)
+                NavHostFragment.findNavController(InventarioFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment));
 
         // PRUEBAS

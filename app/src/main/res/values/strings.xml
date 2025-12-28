@@ -8,6 +8,11 @@
     <string name="previous">Previous</string>
     <string name="inventario">En inventario</string>
     <string name="comprar">Por comprar</string>
+    <string name="settings_title">Configuracion</string>
+    <string name="info_block_text">
+        Práctica evaluable de Android
+        Grupo 1K, Hilaria Romero Bouyahia , Paula Ríos Sánchez
+    </string>
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
