@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.inventario_android.fragments.FirstFragment"
+        android:name="com.example.inventario_android.fragments.InventarioFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_inventario">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
@@ -17,9 +17,9 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.inventario_android.fragments.SecondFragment"
+        android:name="com.example.inventario_android.fragments.CompraFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_compra">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
