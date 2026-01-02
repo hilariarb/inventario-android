@@ -32,13 +32,14 @@ public class InventarioFragment extends Fragment {
     private FragmentInventarioBinding binding;
     private static final String TAG = "INVENTARIO";
     private FirebaseFirestore db;
-    private ProductoAdapter productoAdapter;
+    private ProductoAdapter inventarioAdapter;
+    private ProductoAdapter favoritosAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInventarioBinding.inflate(inflater, container, false);
         db = DB_Conexion.crearConexion();
-        setupRecyclerView();
+        setupRecyclerViews();
 
         return binding.getRoot();
     }
@@ -54,58 +55,65 @@ public class InventarioFragment extends Fragment {
                 NavHostFragment.findNavController(InventarioFragment.this)
                         .navigate(R.id.action_FirstFragment_to_AddProductoFragment));
 
-        cargarInventario();
+        cargarDatos();
     }
 
-    private void setupRecyclerView() {
-        RecyclerView recyclerView = binding.recyclerViewProductos;
-        productoAdapter = new ProductoAdapter();
+    private void setupRecyclerViews() {
+        // Adaptador para Inventario General
+        inventarioAdapter = new ProductoAdapter();
+        binding.recyclerViewProductos.setAdapter(inventarioAdapter);
+        binding.recyclerViewProductos.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        productoAdapter.setListener(new ProductoAdapter.OnProductoListener() {
-            @Override
-            public void onEditar(Producto producto) {
-                mostrarDialogoEditar(producto);
-            }
+        // Adaptador para Favoritos
+        favoritosAdapter = new ProductoAdapter();
+        binding.recyclerViewFavoritos.setAdapter(favoritosAdapter);
+        binding.recyclerViewFavoritos.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        // Listener común
+        ProductoAdapter.OnProductoListener commonListener = new ProductoAdapter.OnProductoListener() {
             @Override
-            public void onEliminar(Producto producto) {
-                eliminarProducto(producto.getId());
-            }
-
-            @Override
-            public void onCambiarEstado(Producto producto) {
-                actualizarProducto(producto);
-            }
+            public void onEditar(Producto producto) { mostrarDialogoEditar(producto); }
 
             @Override
-            public void onValorar(Producto producto) {
-                mostrarDialogoValorar(producto);
-            }
-        });
+            public void onEliminar(Producto producto) { eliminarProducto(producto.getId()); }
 
-        recyclerView.setAdapter(productoAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            @Override
+            public void onCambiarEstado(Producto producto) { actualizarProducto(producto); }
+
+            @Override
+            public void onValorar(Producto producto) { mostrarDialogoValorar(producto); }
+
+            @Override
+            public void onFavorito(Producto producto) { actualizarProducto(producto); }
+        };
+
+        inventarioAdapter.setListener(commonListener);
+        favoritosAdapter.setListener(commonListener);
     }
 
-    private void cargarInventario() {
+    private void cargarDatos() {
         DB_Conexion.getLista(db, new DB_Conexion.ListaCallback() {
             @Override
             public void onListaCargada(List<Producto> productos) {
-                List<Producto> aux = new LinkedList<>();
-                if (productoAdapter != null) {
-                    for (Producto prod : productos) {
-                        if (prod.isInventario()) {
-                            aux.add(prod);
+                List<Producto> inventario = new LinkedList<>();
+                List<Producto> favoritos = new LinkedList<>();
+
+                for (Producto prod : productos) {
+                    if (prod.isInventario()) {
+                        if (prod.isFavorito()) {
+                            favoritos.add(prod);
+                        } else {
+                            inventario.add(prod);
                         }
                     }
-                    productoAdapter.setProductos(aux);
                 }
+                inventarioAdapter.setProductos(inventario);
+                favoritosAdapter.setProductos(favoritos);
             }
 
             @Override
             public void onError(Exception e) {
-                Log.e(TAG, "Error al cargar la lista desde la db: ", e);
-                Toast.makeText(getContext(), "Error al cargar los datos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error al cargar datos", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -114,7 +122,7 @@ public class InventarioFragment extends Fragment {
         DB_Conexion.editarProducto(db, productoAEditar, new DB_Conexion.DocumentCallback() {
             @Override
             public void onSuccess() {
-                cargarInventario();
+                cargarDatos();
             }
 
             @Override
@@ -129,7 +137,7 @@ public class InventarioFragment extends Fragment {
             @Override
             public void onSuccess() {
                 Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_SHORT).show();
-                cargarInventario();
+                cargarDatos();
             }
 
             @Override
@@ -140,9 +148,7 @@ public class InventarioFragment extends Fragment {
     }
 
     private void mostrarDialogoEditar(Producto producto) {
-        View view = LayoutInflater.from(getContext())
-                .inflate(R.layout.dialog_producto, null);
-
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_producto, null);
         EditText etNombre = view.findViewById(R.id.etNombre);
         EditText etDescripcion = view.findViewById(R.id.etDescripcion);
         CheckBox cbInventario = view.findViewById(R.id.cbInventario);
@@ -168,13 +174,10 @@ public class InventarioFragment extends Fragment {
     }
 
     private void mostrarDialogoValorar(Producto producto) {
-        View view = LayoutInflater.from(getContext())
-                .inflate(R.layout.dialog_valoracion, null);
-
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_valoracion, null);
         RatingBar rbPuntuacion = view.findViewById(R.id.rb_puntuacion);
         EditText etComentario = view.findViewById(R.id.et_comentario_valoracion);
 
-        // Limpiar para nueva reseña
         rbPuntuacion.setRating(0);
         etComentario.setText("");
 
@@ -182,10 +185,7 @@ public class InventarioFragment extends Fragment {
                 .setTitle("Valorar " + producto.getNombre())
                 .setView(view)
                 .setPositiveButton("Valorar", (d, w) -> {
-                    String texto = etComentario.getText().toString();
-                    float puntuacion = rbPuntuacion.getRating();
-                    
-                    producto.agregarResena(texto, puntuacion);
+                    producto.agregarResena(etComentario.getText().toString(), rbPuntuacion.getRating());
                     actualizarProducto(producto);
                 })
                 .setNegativeButton("Cancelar", null)

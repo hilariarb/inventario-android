@@ -10,6 +10,7 @@ public class Producto {
     private String descripcion;
     private boolean inventario;
     private boolean por_comprar;
+    private boolean favorito;
     private float puntuacion;
     private String comentario;
     private List<Resena> resenas;
@@ -17,9 +18,9 @@ public class Producto {
     public static class Resena {
         private String texto;
         private float puntuacion;
-        private long fecha; // Timestamp para ordenar
+        private long fecha;
 
-        public Resena() {} // Firebase
+        public Resena() {}
 
         public Resena(String texto, float puntuacion, long fecha) {
             this.texto = texto;
@@ -45,6 +46,7 @@ public class Producto {
         this.descripcion = descripcion;
         this.inventario = inventario;
         this.por_comprar = por_comprar;
+        this.favorito = false;
         this.puntuacion = 0;
         this.comentario = "";
         this.resenas = new ArrayList<>();
@@ -60,6 +62,8 @@ public class Producto {
     public void setInventario(boolean inventario) { this.inventario = inventario; }
     public boolean isPor_comprar() { return por_comprar; }
     public void setPor_comprar(boolean por_comprar) { this.por_comprar = por_comprar; }
+    public boolean isFavorito() { return favorito; }
+    public void setFavorito(boolean favorito) { this.favorito = favorito; }
     public float getPuntuacion() { return puntuacion; }
     public void setPuntuacion(float puntuacion) { this.puntuacion = puntuacion; }
     public String getComentario() { return comentario; }
@@ -74,7 +78,6 @@ public class Producto {
     public void agregarResena(String texto, float puntuacion) {
         if (this.resenas == null) this.resenas = new ArrayList<>();
         this.resenas.add(0, new Resena(texto, puntuacion, System.currentTimeMillis()));
-        // Actualizar última valoración para vista previa
         this.puntuacion = puntuacion;
         this.comentario = texto;
     }

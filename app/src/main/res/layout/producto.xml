@@ -35,7 +35,6 @@
             app:layout_constraintTop_toBottomOf="@id/tv_nombre_producto"
             tools:text="Esta es una descripción larga del producto." />
 
-        <!-- RatingBar justo debajo de la descripción -->
         <RatingBar
             android:id="@+id/rb_puntuacion_visual"
             style="?android:attr/ratingBarStyleSmall"
@@ -47,7 +46,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_descripcion_producto" />
 
-        <!-- Comentario justo debajo de las estrellas -->
         <TextView
             android:id="@+id/tv_comentario_producto"
             android:layout_width="0dp"
@@ -96,11 +94,24 @@
             android:id="@+id/btn_valorar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/btn_star_big_off"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:tint="?attr/colorPrimary" />
+
+        <ImageButton
+            android:id="@+id/btn_favorito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_heart_empty"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@android:color/holo_red_light" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

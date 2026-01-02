@@ -61,8 +61,7 @@ public class CompraFragment extends Fragment {
         
         productoAdapter.setListener(new ProductoAdapter.OnProductoListener() {
             @Override
-            public void onEditar(Producto producto) {
-            }
+            public void onEditar(Producto producto) {}
 
             @Override
             public void onEliminar(Producto producto) {
@@ -77,6 +76,11 @@ public class CompraFragment extends Fragment {
             @Override
             public void onValorar(Producto producto) {
                 mostrarDialogoValorar(producto);
+            }
+
+            @Override
+            public void onFavorito(Producto producto) {
+                actualizarProducto(producto);
             }
         });
 
@@ -150,10 +154,7 @@ public class CompraFragment extends Fragment {
                 .setTitle("Valorar " + producto.getNombre())
                 .setView(view)
                 .setPositiveButton("Valorar", (d, w) -> {
-                    String texto = etComentario.getText().toString();
-                    float puntuacion = rbPuntuacion.getRating();
-                    
-                    producto.agregarResena(texto, puntuacion);
+                    producto.agregarResena(etComentario.getText().toString(), rbPuntuacion.getRating());
                     actualizarProducto(producto);
                 })
                 .setNegativeButton("Cancelar", null)

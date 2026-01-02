@@ -25,6 +25,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         void onEliminar(Producto producto);
         void onCambiarEstado(Producto producto);
         void onValorar(Producto producto);
+        void onFavorito(Producto producto);
     }
 
     public void setListener(OnProductoListener listener) {
@@ -40,6 +41,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         RatingBar puntuacionVisual;
         ImageButton borrarButton;
         ImageButton valorarButton;
+        ImageButton favoritoButton;
 
         public ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -51,6 +53,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             puntuacionVisual = itemView.findViewById(R.id.rb_puntuacion_visual);
             borrarButton = itemView.findViewById(R.id.btn_borrar);
             valorarButton = itemView.findViewById(R.id.btn_valorar);
+            favoritoButton = itemView.findViewById(R.id.btn_favorito);
         }
     }
 
@@ -69,7 +72,6 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.nombreTextView.setText(productoActual.getNombre());
         holder.descripcionTextView.setText(productoActual.getDescripcion());
         
-        // Mostrar la última puntuación y reseña del historial si existen
         if (productoActual.getResenas() != null && !productoActual.getResenas().isEmpty()) {
             Producto.Resena ultima = productoActual.getResenas().get(0);
             holder.puntuacionVisual.setRating(ultima.getPuntuacion());
@@ -77,11 +79,17 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             holder.comentarioTextView.setVisibility(View.VISIBLE);
             holder.puntuacionVisual.setVisibility(View.VISIBLE);
         } else {
-            // Si no hay reseñas, ocultar o mostrar valores por defecto
             holder.puntuacionVisual.setRating(0);
             holder.comentarioTextView.setText("");
             holder.comentarioTextView.setVisibility(View.GONE);
             holder.puntuacionVisual.setVisibility(View.GONE);
+        }
+
+        // Cambio de icono a corazón
+        if (productoActual.isFavorito()) {
+            holder.favoritoButton.setImageResource(R.drawable.ic_heart_filled);
+        } else {
+            holder.favoritoButton.setImageResource(R.drawable.ic_heart_empty);
         }
         
         holder.inventarioCheckBox.setOnCheckedChangeListener(null);
@@ -94,9 +102,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             if (holder.porComprarCheckBox.isChecked()) {
                 productoActual.setPor_comprar(true);
                 productoActual.setInventario(false);
-                if (listener != null) {
-                    listener.onCambiarEstado(productoActual);
-                }
+                if (listener != null) listener.onCambiarEstado(productoActual);
             }
         });
 
@@ -104,28 +110,27 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             if (holder.inventarioCheckBox.isChecked()) {
                 productoActual.setInventario(true);
                 productoActual.setPor_comprar(false);
-                if (listener != null) {
-                    listener.onCambiarEstado(productoActual);
-                }
+                if (listener != null) listener.onCambiarEstado(productoActual);
             }
         });
 
         holder.borrarButton.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onEliminar(productoActual);
-            }
+            if (listener != null) listener.onEliminar(productoActual);
         });
 
         holder.valorarButton.setOnClickListener(v -> {
+            if (listener != null) listener.onValorar(productoActual);
+        });
+
+        holder.favoritoButton.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onValorar(productoActual);
+                productoActual.setFavorito(!productoActual.isFavorito());
+                listener.onFavorito(productoActual);
             }
         });
 
         holder.itemView.setOnLongClickListener(v -> {
-            if (listener != null) {
-                listener.onEditar(productoActual);
-            }
+            if (listener != null) listener.onEditar(productoActual);
             return true;
         });
     }
