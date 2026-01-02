@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +24,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         void onEditar(Producto producto);
         void onEliminar(Producto producto);
         void onCambiarEstado(Producto producto);
+        void onValorar(Producto producto);
     }
 
     public void setListener(OnProductoListener listener) {
@@ -32,17 +34,23 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
     public static class ProductoViewHolder extends RecyclerView.ViewHolder {
         TextView nombreTextView;
         TextView descripcionTextView;
+        TextView comentarioTextView;
         CheckBox inventarioCheckBox;
         CheckBox porComprarCheckBox;
+        RatingBar puntuacionVisual;
         ImageButton borrarButton;
+        ImageButton valorarButton;
 
         public ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
             nombreTextView = itemView.findViewById(R.id.tv_nombre_producto);
             descripcionTextView = itemView.findViewById(R.id.tv_descripcion_producto);
+            comentarioTextView = itemView.findViewById(R.id.tv_comentario_producto);
             inventarioCheckBox = itemView.findViewById(R.id.cb_en_inventario);
             porComprarCheckBox = itemView.findViewById(R.id.cb_por_comprar);
+            puntuacionVisual = itemView.findViewById(R.id.rb_puntuacion_visual);
             borrarButton = itemView.findViewById(R.id.btn_borrar);
+            valorarButton = itemView.findViewById(R.id.btn_valorar);
         }
     }
 
@@ -61,14 +69,27 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.nombreTextView.setText(productoActual.getNombre());
         holder.descripcionTextView.setText(productoActual.getDescripcion());
         
-        // Desactivamos el listener temporalmente para evitar bucles al cargar
+        // Mostrar la última puntuación y reseña del historial si existen
+        if (productoActual.getResenas() != null && !productoActual.getResenas().isEmpty()) {
+            Producto.Resena ultima = productoActual.getResenas().get(0);
+            holder.puntuacionVisual.setRating(ultima.getPuntuacion());
+            holder.comentarioTextView.setText(ultima.getTexto());
+            holder.comentarioTextView.setVisibility(View.VISIBLE);
+            holder.puntuacionVisual.setVisibility(View.VISIBLE);
+        } else {
+            // Si no hay reseñas, ocultar o mostrar valores por defecto
+            holder.puntuacionVisual.setRating(0);
+            holder.comentarioTextView.setText("");
+            holder.comentarioTextView.setVisibility(View.GONE);
+            holder.puntuacionVisual.setVisibility(View.GONE);
+        }
+        
         holder.inventarioCheckBox.setOnCheckedChangeListener(null);
         holder.porComprarCheckBox.setOnCheckedChangeListener(null);
         
         holder.inventarioCheckBox.setChecked(productoActual.isInventario());
         holder.porComprarCheckBox.setChecked(productoActual.isPor_comprar());
 
-        // Lógica para cambiar de Inventario a Comprar
         holder.porComprarCheckBox.setOnClickListener(v -> {
             if (holder.porComprarCheckBox.isChecked()) {
                 productoActual.setPor_comprar(true);
@@ -79,7 +100,6 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             }
         });
 
-        // Lógica para cambiar de Comprar a Inventario (cuando se "vuelve a comprar")
         holder.inventarioCheckBox.setOnClickListener(v -> {
             if (holder.inventarioCheckBox.isChecked()) {
                 productoActual.setInventario(true);
@@ -93,6 +113,12 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.borrarButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onEliminar(productoActual);
+            }
+        });
+
+        holder.valorarButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onValorar(productoActual);
             }
         });
 

@@ -35,25 +35,51 @@
             app:layout_constraintTop_toBottomOf="@id/tv_nombre_producto"
             tools:text="Esta es una descripción larga del producto." />
 
+        <!-- RatingBar justo debajo de la descripción -->
+        <RatingBar
+            android:id="@+id/rb_puntuacion_visual"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_descripcion_producto" />
+
+        <!-- Comentario justo debajo de las estrellas -->
+        <TextView
+            android:id="@+id/tv_comentario_producto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textStyle="italic"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintEnd_toStartOf="@+id/btn_valorar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rb_puntuacion_visual"
+            tools:text="Ultima reseña: Muy buen producto..." />
+
         <CheckBox
             android:id="@+id/cb_en_inventario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:clickable="false"
             android:text="@string/inventario"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_descripcion_producto" />
+            app:layout_constraintTop_toBottomOf="@id/tv_comentario_producto" />
 
         <CheckBox
             android:id="@+id/cb_por_comprar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:clickable="false"
             android:text="@string/comprar"
             app:layout_constraintStart_toEndOf="@id/cb_en_inventario"
-            app:layout_constraintTop_toBottomOf="@id/tv_descripcion_producto"
+            app:layout_constraintTop_toBottomOf="@id/tv_comentario_producto"
             android:layout_marginStart="16dp"/>
 
         <ImageButton
@@ -64,8 +90,17 @@
             android:src="@android:drawable/ic_menu_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:tint="@android:color/holo_red_dark" />
+
+        <ImageButton
+            android:id="@+id/btn_valorar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/btn_star_big_off"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="?attr/colorPrimary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

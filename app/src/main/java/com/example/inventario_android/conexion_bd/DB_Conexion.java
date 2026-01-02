@@ -5,6 +5,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,9 +43,12 @@ public class DB_Conexion {
         data.put("descripcion", producto.getDescripcion());
         data.put("inventario", producto.isInventario());
         data.put("por_comprar", producto.isPor_comprar());
+        data.put("puntuacion", producto.getPuntuacion());
+        data.put("comentario", producto.getComentario());
+        data.put("resenas", producto.getResenas());
 
         db.collection(COLECCION)
-                .add(data) // .add() crea el documento con un ID automático
+                .add(data)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Producto creado con ID: " + documentReference.getId());
                     callback.onSuccess();
@@ -96,6 +100,9 @@ public class DB_Conexion {
         updates.put("descripcion", producto.getDescripcion());
         updates.put("inventario", producto.isInventario());
         updates.put("por_comprar", producto.isPor_comprar());
+        updates.put("puntuacion", producto.getPuntuacion());
+        updates.put("comentario", producto.getComentario());
+        updates.put("resenas", producto.getResenas());
 
         docRef.update(updates)
                 .addOnSuccessListener(aVoid -> {
@@ -131,13 +138,41 @@ public class DB_Conexion {
 
     private static Producto crearProductoDesdeDocumento(QueryDocumentSnapshot docu){
         try {
-            return new Producto(
+            Producto p = new Producto(
                     docu.getId(),
                     docu.getString("nombre"),
                     docu.getString("descripcion"),
-                    docu.getBoolean("inventario"),
-                    docu.getBoolean("por_comprar")
+                    docu.getBoolean("inventario") != null ? docu.getBoolean("inventario") : false,
+                    docu.getBoolean("por_comprar") != null ? docu.getBoolean("por_comprar") : false
             );
+
+            if (docu.get("puntuacion") != null) {
+                p.setPuntuacion(docu.getDouble("puntuacion").floatValue());
+            }
+            if (docu.getString("comentario") != null) {
+                p.setComentario(docu.getString("comentario"));
+            }
+
+            // Cargar historial de reseñas
+            List<Map<String, Object>> resMaps = (List<Map<String, Object>>) docu.get("resenas");
+            if (resMaps != null) {
+                List<Producto.Resena> resenas = new ArrayList<>();
+                for (Map<String, Object> map : resMaps) {
+                    String texto = (String) map.get("texto");
+                    float punt = 0;
+                    if (map.get("puntuacion") != null) {
+                        punt = ((Number) map.get("puntuacion")).floatValue();
+                    }
+                    long fecha = 0;
+                    if (map.get("fecha") != null) {
+                        fecha = ((Number) map.get("fecha")).longValue();
+                    }
+                    resenas.add(new Producto.Resena(texto, punt, fecha));
+                }
+                p.setResenas(resenas);
+            }
+
+            return p;
         } catch (Exception e) {
             Log.e(TAG, "Error al parsear documento " + docu.getId(), e);
             return null;

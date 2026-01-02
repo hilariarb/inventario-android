@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.RatingBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -53,11 +54,6 @@ public class InventarioFragment extends Fragment {
                 NavHostFragment.findNavController(InventarioFragment.this)
                         .navigate(R.id.action_FirstFragment_to_AddProductoFragment));
 
-        // Mantengo el FAB por si quieres usarlo también, pero oculto según el layout anterior
-        binding.fabAddProducto.setOnClickListener(v ->
-                NavHostFragment.findNavController(InventarioFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_AddProductoFragment));
-
         cargarInventario();
     }
 
@@ -79,6 +75,11 @@ public class InventarioFragment extends Fragment {
             @Override
             public void onCambiarEstado(Producto producto) {
                 actualizarProducto(producto);
+            }
+
+            @Override
+            public void onValorar(Producto producto) {
+                mostrarDialogoValorar(producto);
             }
         });
 
@@ -113,7 +114,6 @@ public class InventarioFragment extends Fragment {
         DB_Conexion.editarProducto(db, productoAEditar, new DB_Conexion.DocumentCallback() {
             @Override
             public void onSuccess() {
-                Toast.makeText(getContext(), "Producto actualizado", Toast.LENGTH_SHORT).show();
                 cargarInventario();
             }
 
@@ -161,6 +161,31 @@ public class InventarioFragment extends Fragment {
                     producto.setDescripcion(etDescripcion.getText().toString());
                     producto.setInventario(cbInventario.isChecked());
                     producto.setPor_comprar(cbPorComprar.isChecked());
+                    actualizarProducto(producto);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void mostrarDialogoValorar(Producto producto) {
+        View view = LayoutInflater.from(getContext())
+                .inflate(R.layout.dialog_valoracion, null);
+
+        RatingBar rbPuntuacion = view.findViewById(R.id.rb_puntuacion);
+        EditText etComentario = view.findViewById(R.id.et_comentario_valoracion);
+
+        // Limpiar para nueva reseña
+        rbPuntuacion.setRating(0);
+        etComentario.setText("");
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Valorar " + producto.getNombre())
+                .setView(view)
+                .setPositiveButton("Valorar", (d, w) -> {
+                    String texto = etComentario.getText().toString();
+                    float puntuacion = rbPuntuacion.getRating();
+                    
+                    producto.agregarResena(texto, puntuacion);
                     actualizarProducto(producto);
                 })
                 .setNegativeButton("Cancelar", null)
