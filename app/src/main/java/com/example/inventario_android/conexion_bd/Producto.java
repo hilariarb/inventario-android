@@ -9,6 +9,10 @@ public class Producto {
     private boolean inventario;
     private boolean por_comprar;
 
+    public Producto() {
+        // Requerido por Firebase
+    }
+
     public Producto(String id, String nombre, String descripcion, boolean inventario, boolean por_comprar) {
         this.id = id;
         this.nombre = nombre;
@@ -16,56 +20,33 @@ public class Producto {
         this.inventario = inventario;
         this.por_comprar = por_comprar;
     }
-//------------------------------------------------------ GETTERS
-    public String getId() {
-        return id;
-    }
-    public String getNombre() {
-        return nombre;
-    }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public boolean isInventario() {
-        return inventario;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public boolean isPor_comprar() {
-        return por_comprar;
-    }
-//------------------------------------------------------ SETTERS
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    public void setPor_comprar(String por_comprar) {
-        this.por_comprar = Boolean.parseBoolean(por_comprar);
-    }
+    public boolean isInventario() { return inventario; }
+    public void setInventario(boolean inventario) { this.inventario = inventario; }
 
-    public void setInventario(String inventario) {
-        this.por_comprar = Boolean.parseBoolean(inventario);
-    }
+    public boolean isPor_comprar() { return por_comprar; }
+    public void setPor_comprar(boolean por_comprar) { this.por_comprar = por_comprar; }
 
-//------------------------------------------------------ OVERRIDE
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (!(obj instanceof Producto)){
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof Producto)) return false;
         Producto otro = (Producto) obj;
-        return otro.getId().equals(this.getId());
+        if (this.id == null || otro.id == null) return false;
+        return this.id.equals(otro.id);
     }
 
     @Override
     public String toString() {
-        return getId() + " => " + getNombre() +
-                " - " + getDescripcion() +
-                " - " + isInventario() +
-                " - " + isPor_comprar();
+        return nombre + " (" + (inventario ? "En stock" : "Sin stock") + ")";
     }
 }

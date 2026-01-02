@@ -14,28 +14,26 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- TextView para mostrar el nombre del producto -->
         <TextView
             android:id="@+id/tv_nombre_producto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_borrar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Nombre del Producto" />
 
-        <!-- TextView para mostrar la descripción del producto -->
         <TextView
             android:id="@+id/tv_descripcion_producto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_borrar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_nombre_producto"
-            tools:text="Esta es una descripción larga del producto para ver cómo se ajusta el texto." />
+            tools:text="Esta es una descripción larga del producto." />
 
         <CheckBox
             android:id="@+id/cb_en_inventario"
@@ -51,12 +49,23 @@
             android:id="@+id/cb_por_comprar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="208dp"
             android:layout_marginTop="12dp"
             android:clickable="false"
             android:text="@string/comprar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_descripcion_producto" />
+            app:layout_constraintStart_toEndOf="@id/cb_en_inventario"
+            app:layout_constraintTop_toBottomOf="@id/tv_descripcion_producto"
+            android:layout_marginStart="16dp"/>
+
+        <ImageButton
+            android:id="@+id/btn_borrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="@android:color/holo_red_dark" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
