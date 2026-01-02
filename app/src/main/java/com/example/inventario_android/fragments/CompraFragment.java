@@ -51,15 +51,33 @@ public class CompraFragment extends Fragment {
     private void setupRecyclerView() {
         RecyclerView recyclerView = binding.recyclerViewProductos;
         productoAdapter = new ProductoAdapter();
+        
+        productoAdapter.setListener(new ProductoAdapter.OnProductoListener() {
+            @Override
+            public void onEditar(Producto producto) {
+                // Opcional: implementar edición desde aquí también
+            }
+
+            @Override
+            public void onEliminar(Producto producto) {
+                eliminarProducto(producto.getId());
+            }
+
+            @Override
+            public void onCambiarEstado(Producto producto) {
+                actualizarProducto(producto);
+            }
+        });
+
         recyclerView.setAdapter(productoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void cargarCompra() {
-        List<Producto> aux = new LinkedList<>();
         DB_Conexion.getLista(db, new DB_Conexion.ListaCallback() {
             @Override
             public void onListaCargada(List<Producto> productos) {
+                List<Producto> aux = new LinkedList<>();
                 if (productoAdapter != null) {
                     for (Producto prod : productos) {
                         if (prod.isPor_comprar()) {
@@ -68,13 +86,42 @@ public class CompraFragment extends Fragment {
                     }
                     productoAdapter.setProductos(aux);
                 }
-                DB_Conexion.mostrar(aux);
             }
 
             @Override
             public void onError(Exception e) {
                 Log.e(TAG, "Error al cargar la lista desde la db: ", e);
                 Toast.makeText(getContext(), "Error al cargar los datos", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void actualizarProducto(Producto productoAEditar){
+        DB_Conexion.editarProducto(db, productoAEditar, new DB_Conexion.DocumentCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getContext(), "Producto movido al Inventario", Toast.LENGTH_SHORT).show();
+                cargarCompra();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(getContext(), "Error al actualizar", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void eliminarProducto(String idDelProductoAEliminar){
+        DB_Conexion.eliminarProducto(db, idDelProductoAEliminar, new DB_Conexion.DocumentCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_SHORT).show();
+                cargarCompra();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(getContext(), "Error al eliminar", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -60,17 +60,42 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
         holder.nombreTextView.setText(productoActual.getNombre());
         holder.descripcionTextView.setText(productoActual.getDescripcion());
+        
+        // Desactivamos el listener temporalmente para evitar bucles al cargar
+        holder.inventarioCheckBox.setOnCheckedChangeListener(null);
+        holder.porComprarCheckBox.setOnCheckedChangeListener(null);
+        
         holder.inventarioCheckBox.setChecked(productoActual.isInventario());
         holder.porComprarCheckBox.setChecked(productoActual.isPor_comprar());
 
-        // Evento de clic para borrar
+        // Lógica para cambiar de Inventario a Comprar
+        holder.porComprarCheckBox.setOnClickListener(v -> {
+            if (holder.porComprarCheckBox.isChecked()) {
+                productoActual.setPor_comprar(true);
+                productoActual.setInventario(false);
+                if (listener != null) {
+                    listener.onCambiarEstado(productoActual);
+                }
+            }
+        });
+
+        // Lógica para cambiar de Comprar a Inventario (cuando se "vuelve a comprar")
+        holder.inventarioCheckBox.setOnClickListener(v -> {
+            if (holder.inventarioCheckBox.isChecked()) {
+                productoActual.setInventario(true);
+                productoActual.setPor_comprar(false);
+                if (listener != null) {
+                    listener.onCambiarEstado(productoActual);
+                }
+            }
+        });
+
         holder.borrarButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onEliminar(productoActual);
             }
         });
 
-        // Evento de clic largo para editar (opcional, pero útil)
         holder.itemView.setOnLongClickListener(v -> {
             if (listener != null) {
                 listener.onEditar(productoActual);
