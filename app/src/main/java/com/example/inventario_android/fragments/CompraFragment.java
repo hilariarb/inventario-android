@@ -30,13 +30,14 @@ public class CompraFragment extends Fragment {
     private FragmentCompraBinding binding;
     private static final String TAG = "POR COMPRAR";
     private FirebaseFirestore db;
-    private ProductoAdapter productoAdapter;
+    private ProductoAdapter compraAdapter;
+    private ProductoAdapter favoritosAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCompraBinding.inflate(inflater, container, false);
         db = DB_Conexion.crearConexion();
-        setupRecyclerView();
+        setupRecyclerViews();
 
         return binding.getRoot();
     }
@@ -52,61 +53,65 @@ public class CompraFragment extends Fragment {
                 NavHostFragment.findNavController(CompraFragment.this)
                         .navigate(R.id.action_SecondFragment_to_AddProductoFragment));
 
-        cargarCompra();
+        cargarDatos();
     }
 
-    private void setupRecyclerView() {
-        RecyclerView recyclerView = binding.recyclerViewProductos;
-        productoAdapter = new ProductoAdapter();
-        
-        productoAdapter.setListener(new ProductoAdapter.OnProductoListener() {
+    private void setupRecyclerViews() {
+        // Adaptador para Lista de Compra General
+        compraAdapter = new ProductoAdapter();
+        binding.recyclerViewProductos.setAdapter(compraAdapter);
+        binding.recyclerViewProductos.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Adaptador para Favoritos en Compra
+        favoritosAdapter = new ProductoAdapter();
+        binding.recyclerViewFavoritosCompra.setAdapter(favoritosAdapter);
+        binding.recyclerViewFavoritosCompra.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Listener común
+        ProductoAdapter.OnProductoListener commonListener = new ProductoAdapter.OnProductoListener() {
             @Override
             public void onEditar(Producto producto) {}
 
             @Override
-            public void onEliminar(Producto producto) {
-                eliminarProducto(producto.getId());
-            }
+            public void onEliminar(Producto producto) { eliminarProducto(producto.getId()); }
 
             @Override
-            public void onCambiarEstado(Producto producto) {
-                actualizarProducto(producto);
-            }
+            public void onCambiarEstado(Producto producto) { actualizarProducto(producto); }
 
             @Override
-            public void onValorar(Producto producto) {
-                mostrarDialogoValorar(producto);
-            }
+            public void onValorar(Producto producto) { mostrarDialogoValorar(producto); }
 
             @Override
-            public void onFavorito(Producto producto) {
-                actualizarProducto(producto);
-            }
-        });
+            public void onFavorito(Producto producto) { actualizarProducto(producto); }
+        };
 
-        recyclerView.setAdapter(productoAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        compraAdapter.setListener(commonListener);
+        favoritosAdapter.setListener(commonListener);
     }
 
-    private void cargarCompra() {
+    private void cargarDatos() {
         DB_Conexion.getLista(db, new DB_Conexion.ListaCallback() {
             @Override
             public void onListaCargada(List<Producto> productos) {
-                List<Producto> aux = new LinkedList<>();
-                if (productoAdapter != null) {
-                    for (Producto prod : productos) {
-                        if (prod.isPor_comprar()) {
-                            aux.add(prod);
+                List<Producto> compra = new LinkedList<>();
+                List<Producto> favoritos = new LinkedList<>();
+
+                for (Producto prod : productos) {
+                    if (prod.isPor_comprar()) {
+                        if (prod.isFavorito()) {
+                            favoritos.add(prod);
+                        } else {
+                            compra.add(prod);
                         }
                     }
-                    productoAdapter.setProductos(aux);
                 }
+                compraAdapter.setProductos(compra);
+                favoritosAdapter.setProductos(favoritos);
             }
 
             @Override
             public void onError(Exception e) {
-                Log.e(TAG, "Error al cargar la lista desde la db: ", e);
-                Toast.makeText(getContext(), "Error al cargar los datos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error al cargar datos", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -115,7 +120,7 @@ public class CompraFragment extends Fragment {
         DB_Conexion.editarProducto(db, productoAEditar, new DB_Conexion.DocumentCallback() {
             @Override
             public void onSuccess() {
-                cargarCompra();
+                cargarDatos();
             }
 
             @Override
@@ -130,7 +135,7 @@ public class CompraFragment extends Fragment {
             @Override
             public void onSuccess() {
                 Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_SHORT).show();
-                cargarCompra();
+                cargarDatos();
             }
 
             @Override
@@ -141,9 +146,7 @@ public class CompraFragment extends Fragment {
     }
 
     private void mostrarDialogoValorar(Producto producto) {
-        View view = LayoutInflater.from(getContext())
-                .inflate(R.layout.dialog_valoracion, null);
-
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_valoracion, null);
         RatingBar rbPuntuacion = view.findViewById(R.id.rb_puntuacion);
         EditText etComentario = view.findViewById(R.id.et_comentario_valoracion);
 

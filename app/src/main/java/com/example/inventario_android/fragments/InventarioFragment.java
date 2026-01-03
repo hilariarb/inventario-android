@@ -19,6 +19,7 @@ import com.example.inventario_android.R;
 import com.example.inventario_android.conexion_bd.DB_Conexion;
 import com.example.inventario_android.conexion_bd.Producto;
 import com.example.inventario_android.databinding.FragmentInventarioBinding;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.LinkedList;
@@ -59,23 +60,27 @@ public class InventarioFragment extends Fragment {
     }
 
     private void setupRecyclerViews() {
-        // Adaptador para Inventario General
         inventarioAdapter = new ProductoAdapter();
         binding.recyclerViewProductos.setAdapter(inventarioAdapter);
         binding.recyclerViewProductos.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Adaptador para Favoritos
         favoritosAdapter = new ProductoAdapter();
         binding.recyclerViewFavoritos.setAdapter(favoritosAdapter);
         binding.recyclerViewFavoritos.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Listener común
         ProductoAdapter.OnProductoListener commonListener = new ProductoAdapter.OnProductoListener() {
             @Override
             public void onEditar(Producto producto) { mostrarDialogoEditar(producto); }
 
             @Override
-            public void onEliminar(Producto producto) { eliminarProducto(producto.getId()); }
+            public void onEliminar(Producto producto) { 
+                new AlertDialog.Builder(getContext())
+                    .setTitle("Eliminar producto")
+                    .setMessage("¿Estás seguro de que quieres eliminar " + producto.getNombre() + "?")
+                    .setPositiveButton("Eliminar", (d, w) -> eliminarProducto(producto.getId()))
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+            }
 
             @Override
             public void onCambiarEstado(Producto producto) { actualizarProducto(producto); }
@@ -84,7 +89,11 @@ public class InventarioFragment extends Fragment {
             public void onValorar(Producto producto) { mostrarDialogoValorar(producto); }
 
             @Override
-            public void onFavorito(Producto producto) { actualizarProducto(producto); }
+            public void onFavorito(Producto producto) { 
+                actualizarProducto(producto);
+                String mensaje = producto.isFavorito() ? "Añadido a favoritos" : "Quitado de favoritos";
+                Snackbar.make(binding.getRoot(), mensaje, Snackbar.LENGTH_SHORT).show();
+            }
         };
 
         inventarioAdapter.setListener(commonListener);
@@ -100,11 +109,8 @@ public class InventarioFragment extends Fragment {
 
                 for (Producto prod : productos) {
                     if (prod.isInventario()) {
-                        if (prod.isFavorito()) {
-                            favoritos.add(prod);
-                        } else {
-                            inventario.add(prod);
-                        }
+                        if (prod.isFavorito()) favoritos.add(prod);
+                        else inventario.add(prod);
                     }
                 }
                 inventarioAdapter.setProductos(inventario);
@@ -113,7 +119,7 @@ public class InventarioFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(), "Error al cargar datos", Toast.LENGTH_SHORT).show();
+                mostrarErrorDialog("Error al cargar datos", e.getMessage());
             }
         });
     }
@@ -123,11 +129,12 @@ public class InventarioFragment extends Fragment {
             @Override
             public void onSuccess() {
                 cargarDatos();
+                Toast.makeText(getContext(), "Producto actualizado", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(), "Error al actualizar", Toast.LENGTH_SHORT).show();
+                mostrarErrorDialog("Error al actualizar", e.getMessage());
             }
         });
     }
@@ -136,15 +143,24 @@ public class InventarioFragment extends Fragment {
         DB_Conexion.eliminarProducto(db, idDelProductoAEliminar, new DB_Conexion.DocumentCallback() {
             @Override
             public void onSuccess() {
-                Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_SHORT).show();
                 cargarDatos();
+                Snackbar.make(binding.getRoot(), "Producto eliminado", Snackbar.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(), "Error al eliminar", Toast.LENGTH_SHORT).show();
+                mostrarErrorDialog("Error al eliminar", e.getMessage());
             }
         });
+    }
+
+    private void mostrarErrorDialog(String titulo, String mensaje) {
+        new AlertDialog.Builder(getContext())
+                .setTitle(titulo)
+                .setMessage(mensaje)
+                .setPositiveButton("Aceptar", null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private void mostrarDialogoEditar(Producto producto) {
