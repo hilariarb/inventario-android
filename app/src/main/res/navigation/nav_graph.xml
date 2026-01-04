@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/WelcomeFragment"
         android:name="com.example.inventario_android.fragments.WelcomeFragment"
-        android:label="Bienvenida"
+        android:label="@string/label_welcome"
         tools:layout="@layout/fragment_welcome">
         <action
             android:id="@+id/action_WelcomeFragment_to_FirstFragment"
@@ -46,6 +46,6 @@
     <fragment
         android:id="@+id/AddProductoFragment"
         android:name="com.example.inventario_android.fragments.AddProductoFragment"
-        android:label="Añadir Producto"
+        android:label="@string/btn_add_product"
         tools:layout="@layout/fragment_add_producto" />
 </navigation>

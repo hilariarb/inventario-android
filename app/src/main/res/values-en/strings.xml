@@ -19,7 +19,7 @@
     <string name="btn_save">Save Product</string>
     <string name="btn_cancel">Cancel</string>
     <string name="title_edit_product">Edit product</string>
-    <string name="title_rate_product">Rate Product</string>
+    <string name="title_rate_product">Rate</string>
     <string name="hint_comment">Add a comment...</string>
     <string name="btn_rate">Rate</string>
     <string name="label_latest_review">Latest review: </string>
@@ -47,4 +47,6 @@
     <string name="btn_back">Back</string>
     <string name="btn_spanish">Spanish</string>
     <string name="btn_english">English</string>
+    
+    <string name="label_welcome">Welcome</string>
 </resources>

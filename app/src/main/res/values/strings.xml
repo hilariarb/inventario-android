@@ -19,7 +19,7 @@
     <string name="btn_save">Guardar Producto</string>
     <string name="btn_cancel">Cancelar</string>
     <string name="title_edit_product">Editar producto</string>
-    <string name="title_rate_product">Valorar Producto</string>
+    <string name="title_rate_product">Valorar</string>
     <string name="hint_comment">Añade un comentario...</string>
     <string name="btn_rate">Valorar</string>
     <string name="label_latest_review">Última reseña: </string>
@@ -47,4 +47,6 @@
     <string name="btn_back">Volver</string>
     <string name="btn_spanish">Español</string>
     <string name="btn_english">Inglés</string>
+    
+    <string name="label_welcome">Bienvenido</string>
 </resources>
