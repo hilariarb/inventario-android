@@ -20,6 +20,7 @@ import com.example.inventario_android.R;
 import com.example.inventario_android.conexion_bd.DB_Conexion;
 import com.example.inventario_android.conexion_bd.Producto;
 import com.example.inventario_android.databinding.FragmentCompraBinding;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.LinkedList;
@@ -57,23 +58,27 @@ public class CompraFragment extends Fragment {
     }
 
     private void setupRecyclerViews() {
-        // Adaptador para Lista de Compra General
         compraAdapter = new ProductoAdapter();
         binding.recyclerViewProductos.setAdapter(compraAdapter);
         binding.recyclerViewProductos.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Adaptador para Favoritos en Compra
         favoritosAdapter = new ProductoAdapter();
         binding.recyclerViewFavoritosCompra.setAdapter(favoritosAdapter);
         binding.recyclerViewFavoritosCompra.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Listener común
         ProductoAdapter.OnProductoListener commonListener = new ProductoAdapter.OnProductoListener() {
             @Override
             public void onEditar(Producto producto) {}
 
             @Override
-            public void onEliminar(Producto producto) { eliminarProducto(producto.getId()); }
+            public void onEliminar(Producto producto) { 
+                new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.msg_confirm_delete_title)
+                    .setMessage(R.string.msg_confirm_delete)
+                    .setPositiveButton(R.string.msg_product_deleted, (d, w) -> eliminarProducto(producto.getId()))
+                    .setNegativeButton(R.string.btn_cancel, null)
+                    .show();
+            }
 
             @Override
             public void onCambiarEstado(Producto producto) { actualizarProducto(producto); }
@@ -82,7 +87,11 @@ public class CompraFragment extends Fragment {
             public void onValorar(Producto producto) { mostrarDialogoValorar(producto); }
 
             @Override
-            public void onFavorito(Producto producto) { actualizarProducto(producto); }
+            public void onFavorito(Producto producto) { 
+                actualizarProducto(producto);
+                int mensajeId = producto.isFavorito() ? R.string.added_favorites : R.string.removed_favorites;
+                Snackbar.make(binding.getRoot(), mensajeId, Snackbar.LENGTH_SHORT).show();
+            }
         };
 
         compraAdapter.setListener(commonListener);
@@ -98,11 +107,8 @@ public class CompraFragment extends Fragment {
 
                 for (Producto prod : productos) {
                     if (prod.isPor_comprar()) {
-                        if (prod.isFavorito()) {
-                            favoritos.add(prod);
-                        } else {
-                            compra.add(prod);
-                        }
+                        if (prod.isFavorito()) favoritos.add(prod);
+                        else compra.add(prod);
                     }
                 }
                 compraAdapter.setProductos(compra);
@@ -111,7 +117,7 @@ public class CompraFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(), "Error al cargar datos", Toast.LENGTH_SHORT).show();
+                mostrarErrorDialog(getString(R.string.msg_error_load), e.getMessage());
             }
         });
     }
@@ -121,11 +127,12 @@ public class CompraFragment extends Fragment {
             @Override
             public void onSuccess() {
                 cargarDatos();
+                Toast.makeText(getContext(), R.string.msg_product_updated, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(), "Error al actualizar", Toast.LENGTH_SHORT).show();
+                mostrarErrorDialog(getString(R.string.msg_error_update), e.getMessage());
             }
         });
     }
@@ -134,15 +141,24 @@ public class CompraFragment extends Fragment {
         DB_Conexion.eliminarProducto(db, idDelProductoAEliminar, new DB_Conexion.DocumentCallback() {
             @Override
             public void onSuccess() {
-                Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_SHORT).show();
                 cargarDatos();
+                Snackbar.make(binding.getRoot(), R.string.msg_product_deleted, Snackbar.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(), "Error al eliminar", Toast.LENGTH_SHORT).show();
+                mostrarErrorDialog(getString(R.string.msg_error_delete), e.getMessage());
             }
         });
+    }
+
+    private void mostrarErrorDialog(String titulo, String mensaje) {
+        new AlertDialog.Builder(getContext())
+                .setTitle(titulo)
+                .setMessage(mensaje)
+                .setPositiveButton(android.R.string.ok, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private void mostrarDialogoValorar(Producto producto) {
@@ -154,13 +170,13 @@ public class CompraFragment extends Fragment {
         etComentario.setText("");
 
         new AlertDialog.Builder(getContext())
-                .setTitle("Valorar " + producto.getNombre())
+                .setTitle(getString(R.string.title_rate_product) + ": " + producto.getNombre())
                 .setView(view)
-                .setPositiveButton("Valorar", (d, w) -> {
+                .setPositiveButton(R.string.btn_rate, (d, w) -> {
                     producto.agregarResena(etComentario.getText().toString(), rbPuntuacion.getRating());
                     actualizarProducto(producto);
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(R.string.btn_cancel, null)
                 .show();
     }
 

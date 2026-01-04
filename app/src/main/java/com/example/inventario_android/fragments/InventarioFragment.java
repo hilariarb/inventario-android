@@ -75,10 +75,10 @@ public class InventarioFragment extends Fragment {
             @Override
             public void onEliminar(Producto producto) { 
                 new AlertDialog.Builder(getContext())
-                    .setTitle("Eliminar producto")
-                    .setMessage("¿Estás seguro de que quieres eliminar " + producto.getNombre() + "?")
-                    .setPositiveButton("Eliminar", (d, w) -> eliminarProducto(producto.getId()))
-                    .setNegativeButton("Cancelar", null)
+                    .setTitle(R.string.msg_confirm_delete_title)
+                    .setMessage(R.string.msg_confirm_delete)
+                    .setPositiveButton(R.string.msg_product_deleted, (d, w) -> eliminarProducto(producto.getId()))
+                    .setNegativeButton(R.string.btn_cancel, null)
                     .show();
             }
 
@@ -91,8 +91,8 @@ public class InventarioFragment extends Fragment {
             @Override
             public void onFavorito(Producto producto) { 
                 actualizarProducto(producto);
-                String mensaje = producto.isFavorito() ? "Añadido a favoritos" : "Quitado de favoritos";
-                Snackbar.make(binding.getRoot(), mensaje, Snackbar.LENGTH_SHORT).show();
+                int mensajeId = producto.isFavorito() ? R.string.added_favorites : R.string.removed_favorites;
+                Snackbar.make(binding.getRoot(), mensajeId, Snackbar.LENGTH_SHORT).show();
             }
         };
 
@@ -119,7 +119,7 @@ public class InventarioFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                mostrarErrorDialog("Error al cargar datos", e.getMessage());
+                mostrarErrorDialog(getString(R.string.msg_error_load), e.getMessage());
             }
         });
     }
@@ -129,12 +129,12 @@ public class InventarioFragment extends Fragment {
             @Override
             public void onSuccess() {
                 cargarDatos();
-                Toast.makeText(getContext(), "Producto actualizado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.msg_product_updated, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Exception e) {
-                mostrarErrorDialog("Error al actualizar", e.getMessage());
+                mostrarErrorDialog(getString(R.string.msg_error_update), e.getMessage());
             }
         });
     }
@@ -144,12 +144,12 @@ public class InventarioFragment extends Fragment {
             @Override
             public void onSuccess() {
                 cargarDatos();
-                Snackbar.make(binding.getRoot(), "Producto eliminado", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(binding.getRoot(), R.string.msg_product_deleted, Snackbar.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(Exception e) {
-                mostrarErrorDialog("Error al eliminar", e.getMessage());
+                mostrarErrorDialog(getString(R.string.msg_error_delete), e.getMessage());
             }
         });
     }
@@ -158,7 +158,7 @@ public class InventarioFragment extends Fragment {
         new AlertDialog.Builder(getContext())
                 .setTitle(titulo)
                 .setMessage(mensaje)
-                .setPositiveButton("Aceptar", null)
+                .setPositiveButton(android.R.string.ok, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
@@ -176,16 +176,16 @@ public class InventarioFragment extends Fragment {
         cbPorComprar.setChecked(producto.isPor_comprar());
 
         new AlertDialog.Builder(getContext())
-                .setTitle("Editar producto")
+                .setTitle(R.string.title_edit_product)
                 .setView(view)
-                .setPositiveButton("Guardar", (d, w) -> {
+                .setPositiveButton(R.string.btn_save, (d, w) -> {
                     producto.setNombre(etNombre.getText().toString());
                     producto.setDescripcion(etDescripcion.getText().toString());
                     producto.setInventario(cbInventario.isChecked());
                     producto.setPor_comprar(cbPorComprar.isChecked());
                     actualizarProducto(producto);
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(R.string.btn_cancel, null)
                 .show();
     }
 
@@ -198,13 +198,13 @@ public class InventarioFragment extends Fragment {
         etComentario.setText("");
 
         new AlertDialog.Builder(getContext())
-                .setTitle("Valorar " + producto.getNombre())
+                .setTitle(getString(R.string.title_rate_product) + ": " + producto.getNombre())
                 .setView(view)
-                .setPositiveButton("Valorar", (d, w) -> {
+                .setPositiveButton(R.string.btn_rate, (d, w) -> {
                     producto.agregarResena(etComentario.getText().toString(), rbPuntuacion.getRating());
                     actualizarProducto(producto);
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(R.string.btn_cancel, null)
                 .show();
     }
 

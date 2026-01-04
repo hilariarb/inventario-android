@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Valorar Producto"
+        android:text="@string/title_rate_product"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
@@ -26,7 +26,7 @@
         android:id="@+id/et_comentario_valoracion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Añade un comentario..."
+        android:hint="@string/hint_comment"
         android:inputType="textMultiLine"
         android:minLines="3"
         android:gravity="top"/>

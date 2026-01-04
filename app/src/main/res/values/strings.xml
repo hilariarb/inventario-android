@@ -22,6 +22,7 @@
     <string name="title_rate_product">Valorar Producto</string>
     <string name="hint_comment">Añade un comentario...</string>
     <string name="btn_rate">Valorar</string>
+    <string name="label_latest_review">Última reseña: </string>
     
     <!-- Notificaciones -->
     <string name="msg_product_saved">Producto guardado</string>
@@ -29,6 +30,7 @@
     <string name="msg_product_deleted">Producto eliminado</string>
     <string name="msg_error_load">Error al cargar datos</string>
     <string name="msg_error_save">Error al guardar</string>
+    <string name="msg_confirm_delete_title">Eliminar producto</string>
     <string name="msg_confirm_delete">¿Estás seguro de que quieres eliminar este producto?</string>
     <string name="added_favorites">Añadido a favoritos</string>
     <string name="removed_favorites">Quitado de favoritos</string>
@@ -40,4 +42,9 @@
     <string name="action_change_language">Cambiar idioma</string>
     <string name="settings_title">Configuración</string>
     <string name="info_block_text">Práctica evaluable de Android - Grupo 1K</string>
+    <string name="msg_error_update">Error al actualizar</string>
+    <string name="msg_error_delete">Error al eliminar</string>
+    <string name="btn_back">Volver</string>
+    <string name="btn_spanish">Español</string>
+    <string name="btn_english">Inglés</string>
 </resources>

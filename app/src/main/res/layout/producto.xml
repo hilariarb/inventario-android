@@ -57,8 +57,9 @@
             app:layout_constraintEnd_toStartOf="@+id/btn_valorar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rb_puntuacion_visual"
-            tools:text="Ultima reseña: Muy buen producto..." />
+            tools:text="Ultima reseña..." />
 
+        <!-- CheckBoxes que deben traducirse -->
         <CheckBox
             android:id="@+id/cb_en_inventario"
             android:layout_width="wrap_content"
@@ -94,7 +95,7 @@
             android:id="@+id/btn_valorar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="32dp"
             android:layout_marginBottom="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/btn_star_big_off"

@@ -41,10 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Cambia el idioma de la aplicación y recrea la actividad para aplicar los cambios.
-     * @param langCode El código del idioma (ej. "es" para español, "en" para inglés).
-     */
+
     private void setLocale(String langCode) {
         // Crea un objeto Locale con el nuevo idioma
         Locale locale = new Locale(langCode);
@@ -56,8 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
         config.setLocale(locale);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
 
-        // Es necesario reiniciar la actividad para que los cambios de idioma surtan efecto
-        // en toda la interfaz de usuario.
+
         recreate();
     }
 }

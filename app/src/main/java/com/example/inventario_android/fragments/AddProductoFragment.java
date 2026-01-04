@@ -40,17 +40,12 @@ public class AddProductoFragment extends Fragment {
         cbPorComprar = view.findViewById(R.id.cbPorComprar);
         btnGuardar = view.findViewById(R.id.btnGuardar);
 
-        // Lógica de exclusión mutua para los CheckBox
         cbInventario.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                cbPorComprar.setChecked(false);
-            }
+            if (isChecked) cbPorComprar.setChecked(false);
         });
 
         cbPorComprar.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                cbInventario.setChecked(false);
-            }
+            if (isChecked) cbInventario.setChecked(false);
         });
 
         btnGuardar.setOnClickListener(v -> guardarProducto());
@@ -63,12 +58,12 @@ public class AddProductoFragment extends Fragment {
         boolean porComprar = cbPorComprar.isChecked();
 
         if (nombre.isEmpty()) {
-            Toast.makeText(getContext(), "El nombre es obligatorio", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.hint_name, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!inventario && !porComprar) {
-            Toast.makeText(getContext(), "Selecciona una opción (Inventario o Comprar)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.msg_error_save, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -77,13 +72,13 @@ public class AddProductoFragment extends Fragment {
         DB_Conexion.crearProducto(db, nuevo, new DB_Conexion.DocumentCallback() {
             @Override
             public void onSuccess() {
-                Toast.makeText(getContext(), "Producto guardado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.msg_product_saved, Toast.LENGTH_SHORT).show();
                 NavHostFragment.findNavController(AddProductoFragment.this).navigateUp();
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(), "Error al guardar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.msg_error_save, Toast.LENGTH_SHORT).show();
             }
         });
     }

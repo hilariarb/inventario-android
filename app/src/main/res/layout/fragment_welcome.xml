@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
         android:gravity="center"
-        android:text="¡Bienvenido a tu App de inventario!"
+        android:text="@string/welcome_message"
         android:textColor="@android:color/white"
         android:textSize="32sp"
         android:textStyle="bold"
@@ -21,10 +21,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tvLoading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Cargando tus productos..."
+        android:text="@string/loading_products"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

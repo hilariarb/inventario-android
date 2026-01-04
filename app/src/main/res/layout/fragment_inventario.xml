@@ -19,7 +19,7 @@
                 android:id="@+id/button_inventario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ver Compra"
+                android:text="@string/btn_view_purchase"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Añadir Producto"
+                android:text="@string/btn_add_product"
                 app:layout_constraintStart_toEndOf="@id/button_inventario"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Inventario General"
+                android:text="@string/label_inventory_general"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Mis Favoritos ❤️"
+                android:text="@string/label_favorites"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"

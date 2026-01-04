@@ -9,14 +9,14 @@
         android:id="@+id/etNombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre del producto"
+        android:hint="@string/hint_name"
         android:inputType="textPersonName"/>
 
     <EditText
         android:id="@+id/etDescripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Descripción"
+        android:hint="@string/hint_description"
         android:inputType="textMultiLine"
         android:layout_marginTop="8dp"/>
 
@@ -24,14 +24,14 @@
         android:id="@+id/cbInventario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="En Inventario"
+        android:text="@string/inventario"
         android:layout_marginTop="8dp"/>
 
     <CheckBox
         android:id="@+id/cbPorComprar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Por Comprar"
+        android:text="@string/comprar"
         android:layout_marginTop="8dp"/>
 
 </LinearLayout>
